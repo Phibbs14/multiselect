@@ -42,9 +42,9 @@
                                 <li><a href="#with-javascript-options">With <code>javascript</code> options</a></li>
                                 <li><a href="#demo-search">With search</a></li>
                                 <li><a href="#demo-keep-rendering-sort">Keep rendering sort</a></li>
-                                <li><a href="#demo-undo-redo">Undo / Redo</a></li>
-                                <li><a href="#demo-multiple-destinations">Multiple destinations</a></li>
-                                <li><a href="#demo-optgroup">With <code>optgroup</code></a></li>
+                                <!-- <li><a href="#demo-undo-redo">Undo / Redo</a></li> -->
+                                <!-- <li><a href="#demo-multiple-destinations">Multiple destinations</a></li> -->
+                                <!-- <li><a href="#demo-optgroup">With <code>optgroup</code></a></li> -->
                             </ul>
                         </li>
                         <li><a href="#download">Download</a></li>
@@ -648,7 +648,7 @@ jQuery(document).ready(function($) {
                 </div>
             </div>
 
-            <h4 id="demo-undo-redo">Undo / Redo</h4>
+            <!-- <h4 id="demo-undo-redo">Undo / Redo</h4>
             
             <div class="row">
                 <div class="col-xs-5">
@@ -729,9 +729,9 @@ jQuery(document).ready(function($) {
 &lt;/script&gt;
 </pre>
                 </div>
-            </div>
+            </div> -->
 
-            <h4 id="demo-multiple-destinations">Multiple destinations</h4>
+<!--             <h4 id="demo-multiple-destinations">Multiple destinations</h4>
             
             <div class="row">
                 <div class="col-xs-5">
@@ -918,9 +918,9 @@ jQuery(document).ready(function($) {
 &lt;/script&gt;
 </pre>
                 </div>
-        </div>
+        </div> -->
 
-        <h4 id="demo-optgroup">With optgroup</h4>
+    <!--     <h4 id="demo-optgroup">With optgroup</h4>
             
         <div class="row">
             <div class="col-sm-5">
@@ -990,12 +990,12 @@ jQuery(document).ready(function($) {
 jQuery(document).ready(function($) {
     $(&quot;#optgroup&quot;).multiselect();
 });
-&lt;/script&gt;
+&lt;/script&gt; -->
 </pre>
                 </div>
         </div>
         
-        <div id="download" class="container">
+      <!--   <div id="download" class="container">
             <div class="page-header"><h3>Download</h3></div>
             
             <div class="row">
@@ -1011,13 +1011,13 @@ jQuery(document).ready(function($) {
                     <p><a class="btn btn-lg btn-info" href="https://github.com/crlcu/multiselect/archive/master.zip">Download multiselect.zip</a></p>
                 </div>
             </div>  
-        </div>
+        </div> -->
     </div>
     
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
-    <script type="text/javascript" src="js/multiselect.min.js"></script>
+    <script type="text/javascript" src="js/multiselect.js"></script>
     
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -1064,7 +1064,7 @@ jQuery(document).ready(function($) {
             keepRenderingSort: true
         });
 
-        $('#undo_redo').multiselect();
+        // $('#undo_redo').multiselect();
 
         $('#multi_d').multiselect({
             right: '#multi_d_to, #multi_d_to_2',
@@ -1146,7 +1146,7 @@ jQuery(document).ready(function($) {
             }
         });
 
-        $("#optgroup").multiselect();
+        // $("#optgroup").multiselect();
     });
     
     function scrollTo( id ) {
