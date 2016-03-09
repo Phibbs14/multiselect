@@ -1,10 +1,6 @@
 {
   "name": "multiselect",
-  "version": "2.0.0",
-  "homepage": "https://github.com/crlcu/multiselect",
-  "authors": [
-    "Adrian Crisan <adrian.crisan88@gmail.com>"
-  ],
+  "homepage": "https://github.com/phibbs14/multiselect",
   "description": "jQuery multiselect plugin with two sides",
   "main": "js/multiselect.min.js",
   "keywords": [
@@ -13,5 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "jquery": ">= 1.7"
-  }
+  },
+  "ignore": []
+
 }
