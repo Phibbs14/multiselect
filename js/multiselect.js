@@ -157,7 +157,7 @@ if (typeof jQuery === 'undefined') {
                 self.$left.on('dblclick', 'option', function(e) {
                     e.preventDefault();
                     
-                    var options = self.left.querySelectorAll('option:selected');
+                    var options = self.left.querySelectorAll('option:checked');
                     
                     if ( options.length ) {
                         self.moveToRight(options, e);
@@ -168,7 +168,7 @@ if (typeof jQuery === 'undefined') {
                 self.$right.on('dblclick', 'option', function(e) {
                     e.preventDefault();
 
-                    var options = self.right.querySelectorAll('option:selected');
+                    var options = self.right.querySelectorAll('option:checked');
                     
                     if ( options.length ) {
                         self.moveToLeft(options, e);
@@ -203,7 +203,7 @@ if (typeof jQuery === 'undefined') {
                         if (tokens.length > 0) {
                             // get all matching options
                             var allOptions = self.left.querySelectorAll("option");
-                            for (var i = allOptions.length - 1; i >= 0; i--) {
+                            for (var i = 0; i < allOptions.length; i++) {
                                 var against = allOptions[i].innerHTML;
                                 for (var j = tokens.length - 1; j >= 0; j--) {
                                     if (against.match(new RegExp("([^0-9]|^)"+tokens[j]+"([^0-9]|$)", 'g'))) {
