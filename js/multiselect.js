@@ -208,7 +208,8 @@ if (typeof jQuery === 'undefined') {
                                 for (var j = tokens.length - 1; j >= 0; j--) {
                                     if (against.match(new RegExp("([^0-9]|^)"+tokens[j]+"([^0-9]|$)", 'g'))) {
                                         options.push(allOptions[i]);
-                                        tokens.pop();
+                                        tokens.splice(j, 1);
+                                        continue;
                                     }
                                 }
                             }
