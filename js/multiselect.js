@@ -206,9 +206,9 @@ if (typeof jQuery === 'undefined') {
                             for (var i = 0; i < allOptions.length; i++) {
                                 var against = allOptions[i].innerHTML;
                                 for (var j = tokens.length - 1; j >= 0; j--) {
-                                    if (against.match(new RegExp("([^0-9]|^)"+tokens[j]+"([^0-9]|$)", 'g'))) {
+                                    if (against.indexOf(tokens[j]) > 0 && against.match(new RegExp("([^0-9]|^)"+tokens[j]+"([^0-9]|$)", 'g'))) {
                                         options.push(allOptions[i]);
-                                        tokens.splice(j, 1);
+                                        // tokens.splice(j, 1); performance change is minimal now that it's using indexOf
                                         continue;
                                     }
                                 }
