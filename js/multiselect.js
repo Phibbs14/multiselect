@@ -30,7 +30,20 @@ if (typeof jQuery === 'undefined') {
          *  @constructor
         **/
         function Multiselect( $select, settings ) {
+            var data = $select.data(),
+                newData = [];
+            console.log(data);
+            for(var key in data) {
+                if(data.hasOwnProperty(key)) {
+                    var newKey = key.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
+                    newData[newKey] *= data[key];
+                }
+            }
+             console.log(newData);
+            $.extend(settings, data);
+            console.log(settings);
             var id = $select.prop('id');
+            this.id = id;
             this.$left = $select;
             this.$right = $( settings.right ).length ? $( settings.right ) : $('#' + id + '_to');
             this.left = this.$left.get(0);
@@ -53,8 +66,10 @@ if (typeof jQuery === 'undefined') {
                 keepRenderingSort:  settings.keepRenderingSort,
                 submitAllLeft:      settings.submitAllLeft !== undefined ? settings.submitAllLeft : true,
                 submitAllRight:     settings.submitAllRight !== undefined ? settings.submitAllRight : true,
-                search:             settings.search,
-                bulk:               settings.bulk,
+                leftSearch:         settings.leftSearch,
+                rightSearch:        settings.rightSearch,
+                leftBulk:           settings.leftBulk,
+                // bulk:               settings.bulk,
             };
 
             delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search;
@@ -95,22 +110,25 @@ if (typeof jQuery === 'undefined') {
                     self.$left.mSort(self.callbacks.sort);
                 }
 
-                // Append left filter
-                if (self.options.search && self.options.search.left) {
-                    self.options.search.$left = $(self.options.search.left);
-                    self.$left.before(self.options.search.$left);
+                // Get left filter
+                if (self.options.leftSearch) {
+                    self.options.$leftSearch = $(self.options.leftSearch);
+                } else if ($('#' + self.id + '_leftSearch').length > 0) {
+                    self.options.$leftSearch = $('#' + self.id + '_leftSearch');
+                }
+                
+                // Get right filter
+                if (self.options.rightSearch) {
+                    self.options.$rightSearch = $(self.options.rightSearch);
+                } else if ($('#' + self.id + '_rightSearch').length > 0) {
+                    self.options.$rightSearch = $('#' + self.id + '_rightSearch');
                 }
 
-                // Append right filter
-                if (self.options.search && self.options.search.right) {
-                    self.options.search.$right = $(self.options.search.right);
-                    self.$right.before($(self.options.search.$right));
-                }
-
-                // Append left bulk add
-                if (self.options.bulk && self.options.bulk.left) {
-                    self.options.bulk.$left = $(self.options.bulk.left);
-                    self.$left.parent().append(self.options.bulk.$left);
+                // Get left bulk add
+                if (self.options.leftBulk) {
+                    self.options.$leftBulk = $(self.options.leftBulk);
+                } else if ($('#' + self.id + '_leftBulk').length > 0) {
+                    self.options.$leftBulk = $('#' + self.id + '_leftBulk');
                 }
                 
                 // Initialize events
@@ -121,15 +139,15 @@ if (typeof jQuery === 'undefined') {
                 var self = this;
 
                 // Attach event to left filter
-                if (self.options.search && self.options.search.$left) {
-                    self.options.search.$left.on('keyup', function(e) {
+                if (self.options.$leftSearch) {
+                    self.options.$leftSearch.on('keyup', function(e) {
                         self.$left.mfilter(this.value);
                     });
                 }
 
                 // Attach event to right filter
-                if (self.options.search && self.options.search.$right) {
-                    self.options.search.$right.on('keyup', function(e) {
+                if (self.options.$rightSearch) {
+                    self.options.$rightSearch.on('keyup', function(e) {
                         self.$right.mfilter(this.value);
                     });
                 }
@@ -189,14 +207,14 @@ if (typeof jQuery === 'undefined') {
                 self.actions.$rightSelected.on('click', function(e) {
                     e.preventDefault();
                     var options = null;
-                    if (self.options.bulk && self.options.bulk.$left && self.options.bulk.$left.val().length > 0) {
+                    if (self.options.$leftBulk && self.options.$leftBulk.val().length > 0) {
                         options = [];
                         
                         // get and scrub tokens
-                        var text = self.options.bulk.$left.val();
+                        var text = self.options.$leftBulk.val();
                         var tokens = text.split(/\n/).filter(function(item) {
                             if (item.length > 0) {
-                                return item.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+                                return item.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&").toLowerCase();
                             }
                         });
 
@@ -204,7 +222,7 @@ if (typeof jQuery === 'undefined') {
                             // get all matching options
                             var allOptions = self.left.querySelectorAll("option");
                             for (var i = 0; i < allOptions.length; i++) {
-                                var against = allOptions[i].innerHTML;
+                                var against = allOptions[i].innerHTML.toLowerCase();
                                 for (var j = tokens.length - 1; j >= 0; j--) {
                                     if (against.indexOf(tokens[j]) > -1 && against.match(new RegExp("([^0-9]|^)"+tokens[j]+"([^0-9]|$)", 'g'))) {
                                         options.push(allOptions[i]);
@@ -214,7 +232,7 @@ if (typeof jQuery === 'undefined') {
                                 }
                             }
                         }
-                        self.options.bulk.$left.val('')
+                        self.options.$leftBulk.val('')
                     } else {
                         options = self.left.querySelectorAll("option:checked");   
                     }
@@ -275,8 +293,8 @@ if (typeof jQuery === 'undefined') {
                             return false;
                         }
                     }
-                    if (self.options.search && self.options.search.$right && self.options.search.$right.val().length !== 0) {
-                        self.options.search.$right.val('');
+                    if (self.options.$rightSearch && self.options.$rightSearch.val().length !== 0) {
+                        self.options.$rightSearch.val('');
                         self.$right.mfilter('');
                     }
 
@@ -311,8 +329,8 @@ if (typeof jQuery === 'undefined') {
                         }
                     }
 
-                    if (self.options.search && self.options.search.$left && self.options.search.$left.val().length !== 0) {
-                        self.options.search.$left.val('');
+                    if (self.options.$leftSearch && self.options.$leftSearch.val().length !== 0) {
+                        self.options.$leftSearch.val('');
                         self.$left.mfilter('');
                     }
 
