@@ -8,7 +8,7 @@ if (typeof jQuery === 'undefined') {
     var version = $.fn.jquery.split(' ')[0].split('.');
     
     if (version[0] < 2 && version[1] < 7) {
-        throw new Error('multiselect requires jQuery version 1.7 or higher');
+        throw new Error('multiselect crequires jQuery version 1.7 or higher');
     }
 })(jQuery);
 
@@ -32,16 +32,16 @@ if (typeof jQuery === 'undefined') {
         function Multiselect( $select, settings ) {
             var data = $select.data(),
                 newData = [];
-            console.log(data);
+            
             for(var key in data) {
                 if(data.hasOwnProperty(key)) {
                     var newKey = key.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
                     newData[newKey] *= data[key];
                 }
             }
-             console.log(newData);
+            
             $.extend(settings, data);
-            console.log(settings);
+            
             var id = $select.prop('id');
             this.id = id;
             this.$left = $select;
