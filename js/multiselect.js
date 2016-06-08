@@ -6,7 +6,7 @@ if (typeof jQuery === 'undefined') {
     'use strict';
 
     var version = $.fn.jquery.split(' ')[0].split('.');
-    
+
     if (version[0] < 2 && version[1] < 7) {
         throw new Error('multiselect crequires jQuery version 1.7 or higher');
     }
@@ -32,16 +32,16 @@ if (typeof jQuery === 'undefined') {
         function Multiselect( $select, settings ) {
             var data = $select.data(),
                 newData = [];
-            
+
             for(var key in data) {
                 if(data.hasOwnProperty(key)) {
                     var newKey = key.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
                     newData[newKey] *= data[key];
                 }
             }
-            
+
             $.extend(settings, data);
-            
+
             var id = $select.prop('id');
             this.id = id;
             this.$left = $select;
@@ -55,7 +55,7 @@ if (typeof jQuery === 'undefined') {
                 $leftSelected:   $( settings.leftSelected ).length ? $( settings.leftSelected ) : $('#' + id + '_leftSelected'),
                 $rightSelected:  $( settings.rightSelected ).length ? $( settings.rightSelected ) : $('#' + id + '_rightSelected'),
             };
-            
+
             delete settings.leftAll;
             delete settings.leftSelected;
             delete settings.right;
@@ -75,10 +75,10 @@ if (typeof jQuery === 'undefined') {
             delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search;
 
             this.callbacks = settings;
-            
+
             this.init();
         }
-        
+
         Multiselect.prototype = {
             // Vars
 
@@ -105,7 +105,7 @@ if (typeof jQuery === 'undefined') {
                 if ( typeof self.callbacks.startUp == 'function' ) {
                     self.callbacks.startUp( self.$left, self.$right );
                 }
-                
+
                 if ( !self.skipInitSort && typeof self.callbacks.sort == 'function' ) {
                     self.$left.mSort(self.callbacks.sort);
                 }
@@ -116,7 +116,7 @@ if (typeof jQuery === 'undefined') {
                 } else if ($('#' + self.id + '_leftSearch').length > 0) {
                     self.options.$leftSearch = $('#' + self.id + '_leftSearch');
                 }
-                
+
                 // Get right filter
                 if (self.options.rightSearch) {
                     self.options.$rightSearch = $(self.options.rightSearch);
@@ -130,11 +130,11 @@ if (typeof jQuery === 'undefined') {
                 } else if ($('#' + self.id + '_leftBulk').length > 0) {
                     self.options.$leftBulk = $('#' + self.id + '_leftBulk');
                 }
-                
+
                 // Initialize events
                 self.events();
             },
-            
+
             events: function() {
                 var self = this;
 
@@ -174,20 +174,20 @@ if (typeof jQuery === 'undefined') {
                 // Attach event for double clicking on options from left side
                 self.$left.on('dblclick', 'option', function(e) {
                     e.preventDefault();
-                    
+
                     var options = self.left.querySelectorAll('option:checked');
-                    
+
                     if ( options.length ) {
                         self.moveToRight(options, e);
                     }
                 });
-                
+
                 // Attach event for double clicking on options from right side
                 self.$right.on('dblclick', 'option', function(e) {
                     e.preventDefault();
 
                     var options = self.right.querySelectorAll('option:checked');
-                    
+
                     if ( options.length ) {
                         self.moveToLeft(options, e);
                     }
@@ -198,18 +198,18 @@ if (typeof jQuery === 'undefined') {
                     self.$left.dblclick(function(e) {
                         self.actions.$rightSelected.trigger('click');
                     });
-                    
+
                     self.$right.dblclick(function(e) {
                         self.actions.$leftSelected.trigger('click');
                     });
                 }
-                
+
                 self.actions.$rightSelected.on('click', function(e) {
                     e.preventDefault();
                     var options = null;
                     if (self.options.$leftBulk && self.options.$leftBulk.val().length > 0) {
                         options = [];
-                        
+
                         // get and scrub tokens
                         var text = self.options.$leftBulk.val();
                         var tokens = text.split(/\n/).filter(function(item) {
@@ -224,7 +224,7 @@ if (typeof jQuery === 'undefined') {
                             for (var i = 0; i < allOptions.length; i++) {
                                 var against = allOptions[i].innerHTML.toLowerCase();
                                 for (var j = tokens.length - 1; j >= 0; j--) {
-                                    if (against.indexOf(tokens[j]) > -1 && against.match(new RegExp("([^0-9]|^)"+tokens[j]+"([^0-9]|$)", 'g'))) {
+                                    if (against.indexOf(tokens[j]) > -1 && against.match(new RegExp("([^0-9]|^)0*"+tokens[j]+"([^0-9]|$)", 'g'))) {
                                         options.push(allOptions[i]);
                                         // tokens.splice(j, 1); performance change is minimal now that it's using indexOf
                                         continue;
@@ -232,9 +232,9 @@ if (typeof jQuery === 'undefined') {
                                 }
                             }
                         }
-                        self.options.$leftBulk.val('')
+                        self.options.$leftBulk.val('');
                     } else {
-                        options = self.left.querySelectorAll("option:checked");   
+                        options = self.left.querySelectorAll("option:checked");
                     }
 
                     if (options && options.length) {
@@ -243,11 +243,11 @@ if (typeof jQuery === 'undefined') {
 
                     $(this).blur();
                 });
-                
+
                 self.actions.$leftSelected.on('click', function(e) {
                     e.preventDefault();
 
-                    var options = self.right.querySelectorAll("option:checked");   
+                    var options = self.right.querySelectorAll("option:checked");
 
                     if ( options.length ) {
                         self.moveToLeft(options, e);
@@ -255,11 +255,11 @@ if (typeof jQuery === 'undefined') {
 
                     $(this).blur();
                 });
-                
+
                 self.actions.$rightAll.on('click', function(e) {
                     e.preventDefault();
 
-                    var options = self.left.querySelectorAll("option");   
+                    var options = self.left.querySelectorAll("option");
 
                     if ( options.length ) {
                         self.moveToRight(options, e);
@@ -267,11 +267,11 @@ if (typeof jQuery === 'undefined') {
 
                     $(this).blur();
                 });
-                
+
                 self.actions.$leftAll.on('click', function(e) {
                     e.preventDefault();
-                    
-                    var options = self.right.querySelectorAll("option");   
+
+                    var options = self.right.querySelectorAll("option");
 
                     if ( options.length ) {
                         self.moveToLeft(options, e);
@@ -281,7 +281,7 @@ if (typeof jQuery === 'undefined') {
                 });
 
             },
-            
+
             moveToRight: function(options, event, silent, skipStack ) {
                 var self = this;
 
@@ -299,24 +299,24 @@ if (typeof jQuery === 'undefined') {
                     }
 
                     var fragment = document.createDocumentFragment();
-                    for ( var e = 0; e < options.length; e++ ) { 
-                        fragment.appendChild( options[e] ); 
-                    } 
-                    
+                    for ( var e = 0; e < options.length; e++ ) {
+                        fragment.appendChild( options[e] );
+                    }
+
                     self.right.appendChild(fragment.cloneNode(true) );
 
                     if ( typeof self.callbacks.sort == 'function' && !silent ) {
                         self.$right.mSort(self.callbacks.sort);
                     }
-                    
+
                     if ( typeof self.callbacks.afterMoveToRight == 'function' && !silent ) {
                         self.callbacks.afterMoveToRight( self.$left, self.$right, options );
                     }
-                    
+
                     return self;
                 }
             },
-            
+
             moveToLeft: function( options, event, silent, skipStack ) {
                 var self = this;
 
@@ -335,28 +335,28 @@ if (typeof jQuery === 'undefined') {
                     }
 
                     var fragment = document.createDocumentFragment();
-                    for ( var e = 0; e < options.length; e++ ) { 
-                        fragment.appendChild( options[e] ); 
-                    } 
-                    
+                    for ( var e = 0; e < options.length; e++ ) {
+                        fragment.appendChild( options[e] );
+                    }
+
                     self.left.appendChild(fragment.cloneNode(true) );
 
                     if ( typeof self.callbacks.sort == 'function' && !silent ) {
                         self.$left.mSort(self.callbacks.sort);
                     }
-                    
+
                     if ( typeof self.callbacks.afterMoveToLeft == 'function' && !silent ) {
                         self.callbacks.afterMoveToLeft( self.$left, self.$right, options );
                     }
-                    
+
                     return self;
                 }
             },
-        }
-        
+        };
+
         return Multiselect;
     })($);
-    
+
     $.multiselect = {
         defaults: {
             /** will be executed once - remove from $left all options that are already in $right
@@ -375,23 +375,23 @@ if (typeof jQuery === 'undefined') {
             },
 
             /** will be executed each time before moving option[s] to right
-             *  
+             *
              *  IMPORTANT : this method must return boolean value
              *      true    : continue to moveToRight method
              *      false   : stop
-             * 
+             *
              *  @method beforeMoveToRight
              *  @attribute $left jQuery object
              *  @attribute $right jQuery object
              *  @attribute $options HTML object (the option[s] which was selected to be moved)
-             *  
+             *
              *  @default true
              *  @return {boolean}
             **/
             beforeMoveToRight: function($left, $right, $options) { return true; },
 
             /*  will be executed each time after moving option[s] to right
-             * 
+             *
              *  @method afterMoveToRight
              *  @attribute $left jQuery object
              *  @attribute $right jQuery object
@@ -400,23 +400,23 @@ if (typeof jQuery === 'undefined') {
             afterMoveToRight: function($left, $right, $options) {},
 
             /** will be executed each time before moving option[s] to left
-             *  
+             *
              *  IMPORTANT : this method must return boolean value
              *      true    : continue to moveToRight method
              *      false   : stop
-             * 
+             *
              *  @method beforeMoveToLeft
              *  @attribute $left jQuery object
              *  @attribute $right jQuery object
              *  @attribute $options HTML object (the option[s] which was selected to be moved)
-             *  
+             *
              *  @default true
              *  @return {boolean}
             **/
             beforeMoveToLeft: function($left, $right, $options) { return true; },
 
             /*  will be executed each time after moving option[s] to left
-             * 
+             *
              *  @method afterMoveToLeft
              *  @attribute $left jQuery object
              *  @attribute $right jQuery object
@@ -425,7 +425,7 @@ if (typeof jQuery === 'undefined') {
             afterMoveToLeft: function($left, $right, $options) {},
 
             /** sort options by option text
-             * 
+             *
              *  @method sort
              *  @attribute a HTML option
              *  @attribute b HTML option
@@ -434,11 +434,11 @@ if (typeof jQuery === 'undefined') {
             **/
             sort: function(a, b) {
                 if (a.innerHTML == 'NA') {
-                    return 1;   
+                    return 1;
                 } else if (b.innerHTML == 'NA') {
-                    return -1;   
+                    return -1;
                 }
-                
+
                 return (a.innerHTML > b.innerHTML) ? 1 : -1;
             },
         }
@@ -448,9 +448,9 @@ if (typeof jQuery === 'undefined') {
         return this.each(function() {
             var $this = $(this),
                 data = $this.data();
-            
+
             var settings = $.extend({}, $.multiselect.defaults, data, options);
-            
+
             return new Multiselect($this, settings);
         });
     };
@@ -466,34 +466,34 @@ if (typeof jQuery === 'undefined') {
     $.fn.mfilter = function(filterBy) {
         var fragment = document.createDocumentFragment();
         var _this = this.get(0);
-        var options = _this.querySelectorAll("option");   
+        var options = _this.querySelectorAll("option");
         var _filterBy = filterBy.toLowerCase();
 
-        for ( var e = 0; e < options.length; e++ ) { 
+        for ( var e = 0; e < options.length; e++ ) {
             if (_filterBy.length === 0 || options[e].innerHTML.toLowerCase().indexOf(_filterBy) > -1) {
 
-                fragment.appendChild(options[e]); 
+                fragment.appendChild(options[e]);
             } else {
                 var span = document.createElement('span');
                 span.appendChild(options[e]);
-                fragment.appendChild(span); 
+                fragment.appendChild(span);
             }
-        } 
-        
+        }
+
         this.empty();
         _this.appendChild(fragment.cloneNode(true) );
-    }
+    };
 
     // sort options then reappend them to the select
     $.fn.mSort = function(callback) {
         var _this = this.get(0);
-        var options = Array.prototype.slice.call(_this.querySelectorAll("option"), 0);   
+        var options = Array.prototype.slice.call(_this.querySelectorAll("option"), 0);
         options.sort(callback);
         var fragment = document.createDocumentFragment();
-        for ( var e = 0; e < options.length; e++ ) { 
-            fragment.appendChild( options[e] ); 
-        } 
-        
+        for ( var e = 0; e < options.length; e++ ) {
+            fragment.appendChild( options[e] );
+        }
+
         _this.appendChild(fragment.cloneNode(true));
 
         return this;
