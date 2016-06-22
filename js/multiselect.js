@@ -30,15 +30,7 @@ if (typeof jQuery === 'undefined') {
          *  @constructor
         **/
         function Multiselect( $select, settings ) {
-            var data = $select.data(),
-                newData = [];
-
-            for(var key in data) {
-                if(data.hasOwnProperty(key)) {
-                    var newKey = key.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
-                    newData[newKey] *= data[key];
-                }
-            }
+            var data = $select.data();
 
             $.extend(settings, data);
 
@@ -69,10 +61,16 @@ if (typeof jQuery === 'undefined') {
                 leftSearch:         settings.leftSearch,
                 rightSearch:        settings.rightSearch,
                 leftBulk:           settings.leftBulk,
-                // bulk:               settings.bulk,
+                stopPropagation:    settings.stopPropagation !== undefined ? settings.stopPropagation : false
             };
 
-            delete settings.keepRenderingSort, settings.submitAllLeft, settings.submitAllRight, settings.search;
+            delete settings.keepRenderingSort;
+            delete settings.submitAllLeft;
+            delete settings.submitAllRight;
+            delete settings.leftSearch;
+            delete settings.rightSearch;
+            delete settings.leftBulk;
+            delete settings.stopPropagation;
 
             this.callbacks = settings;
 
@@ -138,17 +136,49 @@ if (typeof jQuery === 'undefined') {
             events: function() {
                 var self = this;
 
+                // prevent events firing from selects unless desired
+                if (self.options.stopPropagation) {
+                    self.$left.on('change keyup', function(e, shouldPropagate) {
+                        if (!shouldPropagate) {
+                            e.stopPropagation();
+                        }
+                    });
+
+                    self.$right.on('change keyup', function(e, shouldPropagate) {
+                        if (!shouldPropagate) {
+                            e.stopPropagation();
+                        }
+                    });
+                }
+
                 // Attach event to left filter
                 if (self.options.$leftSearch) {
                     self.options.$leftSearch.on('keyup', function(e) {
                         self.$left.mfilter(this.value);
                     });
+                    if (self.options.stopPropagation) {
+                        self.options.$leftSearch.on('change input keyup', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
                 }
 
                 // Attach event to right filter
                 if (self.options.$rightSearch) {
                     self.options.$rightSearch.on('keyup', function(e) {
                         self.$right.mfilter(this.value);
+                    });
+                    if (self.options.stopPropagation) {
+                        self.options.$rightSearch.on('change input keyup', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+                }
+
+                // Prevent events firing from left bulk
+                if (self.options.stopPropagation && self.options.$leftBulk) {
+                    self.options.$leftBulk.on('change input keyup', function(e) {
+                        e.stopPropagation();
                     });
                 }
 
@@ -313,6 +343,7 @@ if (typeof jQuery === 'undefined') {
                         self.callbacks.afterMoveToRight( self.$left, self.$right, options );
                     }
 
+                    self.$right.trigger('change', true);
                     return self;
                 }
             },
@@ -349,6 +380,7 @@ if (typeof jQuery === 'undefined') {
                         self.callbacks.afterMoveToLeft( self.$left, self.$right, options );
                     }
 
+                    self.$left.trigger('change', true);
                     return self;
                 }
             },
