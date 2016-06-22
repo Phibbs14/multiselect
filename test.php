@@ -5,7 +5,7 @@
     <meta name="keywords" lang="en" content="jQuery multiselect plugin" />
 
     <title>Test</title>
-    
+
     <link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico" />
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
     <link rel="stylesheet" href="lib/google-code-prettify/prettify.css" />
@@ -15,18 +15,25 @@
 
 
 	<h4 id="demo-search">With search</h4>
-	<form method='post'> 
+	<form method='post'>
 	<div class="row">
 	    <div class="col-sm-5">
 	    	<div class="col-xs-12  no-padding" style="margin-top: 10px;" > <p style="font-weight: bold">All</p> </div>
 	    	<input type="text" id="ls" class="form-control" placeholder="Search..." />
 	        <select id="multiselect" class="form-control" size="15" multiple="multiple"
 	        	data-left-all="#la" data-left-selected="#l" data-right-all="#ra" data-right-selected="#r"
-	        	data-left-bulk="#lb" data-left-search="#ls" data-right-search="#rs">
+	        	data-left-bulk="#lb" data-left-search="#ls" data-right-search="#rs"
+                data-stop-propagation="true">
 	        	<!-- Add all options -->
 	        	<?php for ($i=0; $i < 10; $i++): ?>
-	        		<option value="role_id-<?= $i ?>" data-position="<?=$i?>"><?= $i ?>- Job Code</option>
+	        		<option value="role_id-<?= $i ?>" data-position="<?=$i?>"><?= 'US-010'.$i ?>- Job Code</option>
 	        	<?php endfor ?>
+                <?php for ($i=0; $i < 10; $i++): ?>
+                    <option value="role_id-<?= $i ?>" data-position="<?=$i + 10?>"><?= '000'.$i ?>- Job Code</option>
+                <?php endfor ?>
+                 <?php for ($i=0; $i < 10; $i++): ?>
+                    <option value="role_id-<?= $i ?>" data-position="<?=$i + 20?>"><?= $i ?>- Job Code</option>
+                <?php endfor ?>
 				<option value="" data-position="">TEst</option>
 	        </select>
 	    	<div class="col-xs-12  no-padding" style="margin-top: 10px;" > <p style="font-weight: bold">Bulk Importer</p></div>
@@ -40,33 +47,39 @@
 	        <button type="button" id="l" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
 	        <button type="button" id="la" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
 	    </div>
-	    
+
 	    <div class="col-sm-5">
 	    	<div class="col-xs-12  no-padding" style="margin-top: 10px;" > <p style="font-weight: bold">Selected</p> </div>
 	    	<input type="text" id="rs" class="form-control" placeholder="Search..." />
 	        <select name="employeeRoles" id="multiselect_to" class="form-control" size="15" multiple="multiple">
 	        	<!-- add selected options, these will automatically get removed from the left one if they exists -->
 	        	<?php for ($i=5; $i < 100; $i++): ?>
-	        		<option value="role_id-<?= $i ?>" data-position="<?=$i?>"><?= $i ?>- Job Code</option>
+	        		<!-- <option value="role_id-<?= $i ?>" data-position="<?=$i?>"><?= $i ?>- Job Code</option> -->
 	        	<?php endfor ?>
 	        </select>
 	    </div>
 	</div>
-	<input type="submit" value="Submit"> 
+	<input type="submit" value="Submit">
 	</form>
     <!-- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
-    <script type="text/javascript" src="js/multiselect.min.js"></script>
+    <script type="text/javascript" src="js/multiselect.js"></script>
     <script type="text/javascript">
 
     $(document).ready(function() {
-		$('#multiselect').multiselect({
-            keepRenderingSort: true,
-            submitAllLeft: false
+        $(document).on('change keyup input propertychange', 'input, textarea, select', function(event) {
+            console.log('change');
+            console.log(event);
         });
-	});
+        $('#multiselect').multiselect({
+            keepRenderingSort: true,
+            submitAllLeft: false,
+            // preventPropagation: true
+        });
+// $(document).on('change keyup input propertychange switchChange.bootstrapSwitch', 'input, textarea, select', function() {
+    });
 
     </script>
 </body>
