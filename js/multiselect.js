@@ -252,11 +252,11 @@ if (typeof jQuery === 'undefined') {
                             // get all matching options
                             var allOptions = self.left.querySelectorAll("option");
                             for (var i = 0; i < allOptions.length; i++) {
-                                var against = allOptions[i].innerHTML.toLowerCase();
+                                var against = allOptions[i].innerHTML.toLowerCase().trim();
                                 for (var j = tokens.length - 1; j >= 0; j--) {
-                                    if (against.indexOf(tokens[j]) > -1 && against.match(new RegExp("([^0-9]|^)0*"+tokens[j]+"([^0-9]|$)", 'g'))) {
+                                    var token = tokens[j].toLowerCase().trim();
+                                    if (against.indexOf(token) > -1 && against.match(new RegExp("([^0-9]|^)\s*0*"+token+"\s*([^0-9]|$)", 'g'))) {
                                         options.push(allOptions[i]);
-                                        // tokens.splice(j, 1); performance change is minimal now that it's using indexOf
                                         continue;
                                     }
                                 }
